@@ -62,15 +62,96 @@ void DenaryToBinary() {
 
 }
 
+void DenaryToHexa() {
+    int UserInput;
+    int Remainder;
+    int Quotient;
+    int DivNeed;
+    int i;
+    int index = 0;
+    char HexaString[300];
 
-int main () {
+
+    char temp;
+
+
+    printf("|Denary to HexaDecimal Mode|\n\n");
+    printf("Type in the Denary Number");
+    scanf("%d", &UserInput);
+
+    if (UserInput >= 1048576) {
+        DivNeed = 6;
+    } else if ( UserInput >= 65536) {
+        DivNeed = 5;
+    } else if (UserInput >= 4096) {
+        DivNeed = 4;
+    } else if (UserInput >= 256 ) {
+        DivNeed = 3;
+    } else if (UserInput >= 16 ) {
+        DivNeed = 2;
+    } else {
+        DivNeed = 1;
+    }
+
+
+    int CheckQuotient = UserInput / 16;  // to prevent exra 0 from dumping in.
+    int TempRemainder = UserInput;
+    int TempQuotient = UserInput; 
+
+        for (i = DivNeed; i >=1; i-- ) {
+
+            TempRemainder = TempQuotient % 16;
+            TempQuotient = TempQuotient / 16;
+            if (TempRemainder == 15 ) {
+                HexaString[index] = 'F';
+                index++;
+                HexaString[index] = '\0';
+            } else if (TempRemainder == 14) {
+                HexaString[index] = 'E';
+                index++;
+                HexaString[index] = '\0';
+            } else if (TempRemainder == 13) {
+                HexaString[index] = 'D';
+                index++;
+                HexaString[index] = '\0';
+            } else if (TempRemainder == 12) {
+                HexaString[index] = 'C';
+                index++;
+                HexaString[index] = '\0';
+            } else if (TempRemainder == 11) {
+                HexaString[index] = 'B';
+                index++;
+                HexaString[index] = '\0';
+            } else if (TempRemainder == 10) {
+                HexaString[index] = 'A';
+                index++;
+                HexaString[index] = '\0';
+            } else {
+                HexaString[index] = TempRemainder + '0';
+                index++;
+                HexaString[index] = '\0';
+            }
+        }
+    int start = 0;
+    int end = strlen(HexaString) - 1;
+
+        while (start<end) {
+                temp = HexaString[start];
+                HexaString[start] = HexaString[end];
+                HexaString[end] = temp;
+
+                start++;
+                end--;
+        }
+        printf("%s", HexaString);
+    
+}
+
+int main() {
     
 
     int ModeInput;
         
-    
-
-
     printf("[Welcoming to Number Converter. Choose the Mode] \n\n");
     printf("Type 1 to Turn Denary to Binary. \n");
 
@@ -80,6 +161,8 @@ int main () {
 
     if (ModeInput == 1) {
          DenaryToBinary();
-    }
+    } else if (ModeInput == 2 ) {
+        DenaryToHexa();
+    } 
 
 }
