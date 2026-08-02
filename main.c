@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include <conio.h> 
+#include <ctype.h>
 
 void DenaryToBinary() { 
     unsigned long long UserInput;
@@ -19,7 +21,7 @@ void DenaryToBinary() {
         scanf("%d", &SystemBit);
 
         printf("Type in the Denary Number.\n");
-        scanf("%d", &UserInput);
+        scanf("%llu", &UserInput);
         TempHolder = UserInput;
 
         unsigned long long MaxLimit = pow(2, SystemBit) - 1;
@@ -147,22 +149,147 @@ void DenaryToHexa() {
     
 }
 
-int main() {
+void HexaToBinary() {
+    char HexaDeciInpu[50];
+    int SystemPass = 0;
+    printf("Provide the Hexadecimal input you want to change : ");
+    scanf("%49s", HexaDeciInpu);
     
 
-    int ModeInput;
+    int CCount = strlen(HexaDeciInpu);
+    int TotalBit = CCount * 4;
+
+    char* RawReservation = (char*)malloc(TotalBit+1);
+    char* DenaryReservation = (char*)malloc((TotalBit*2)+1);
+    char* BinaryReservation = (char*)malloc((TotalBit*4)+1);
+
+    for (int i = 0;  i < CCount; i++) { // Putting Each Inside Another chamber for safety , and putting everything in Upper
         
-    printf("[Welcoming to Number Converter. Choose the Mode] \n\n");
-    printf("Type 1 to Turn Denary to Binary. \n");
+        RawReservation[i] = toupper(HexaDeciInpu[i]); // bubble swapping.
+        RawReservation[i+1] = '\0'; // put \0 to notify that the appending has done
 
-    scanf("%d", &ModeInput);
-    
-    
-
-    if (ModeInput == 1) {
-         DenaryToBinary();
-    } else if (ModeInput == 2 ) {
-        DenaryToHexa();
+        if (HexaDeciInpu[i] > 70) {
+            printf("Hey! You cannot provide a letter greater than F! \n");
+        } else {
+            SystemPass = 1;
+        }
     } 
+if (SystemPass == 1) {  
+    for (int i = 0; i < CCount; i++){ // Now getting those number into another chamber, but with a base 10 value before binary.
+        if (RawReservation[i] >= 65 && RawReservation[i] <= 90) { // check if it is an alphabet
+            for (int y = 0; y < 6; y++ ) { // if yes go through each,check whether if a character is = to something.
+                int tempChecker = 65 + y; // double the ASCII value store. 
+                if (RawReservation[i] == tempChecker) { // Check if the ASCII value is equal to its ASCII value of additonal Y loop. 
+                    DenaryReservation[i] = tempChecker - 55; // if yes, then put a Denerial base 10 hexavalue inside a slot. Since the gap between each is always 65
+                }  
+            }
+        } else if (RawReservation[i] >= 48 && RawReservation[i] <= 57) { // now the shit is a digit number in a string format
+            DenaryReservation[i] = RawReservation[i] - '0'; // we now purt it inside DenaryReservation, substract by ASCII of 0 (48), to get the number.
+        }
+    }
+
+    for (int i = 0; i < CCount; i++) {
+        int CalStore = DenaryReservation[i];
+
+        for (int y = 0; y < 4; y++) {
+            int Substractor = pow(2, 3 - y); 
+
+            if (CalStore >= Substractor) {
+                BinaryReservation[(i * 4) + y] = '1';
+                CalStore = CalStore - Substractor;
+            } else {
+                BinaryReservation[(i * 4) + y] = '0';
+            }
+        }
+    }
+    
+    // Cap off the whole string right here at the very end
+    BinaryReservation[CCount * 4] = '\0';
+    
+} else {
+    printf("Existing the program due to wrong inputs.");
+}
+    printf("%s", BinaryReservation);
+
+    free(RawReservation);
+    free(DenaryReservation);
+    free(BinaryReservation);
+}
+
+
+
+
+#define KEY_UP 72
+#define KEY_DOWN 80
+#define KEY_ENTER 13
+
+int main() {
+    int selected = 0;
+    int totalOptions = 4;
+    int key = 0;
+
+while (1) {
+        
+        system("cls");
+
+        printf("==============================\n");
+        printf("   SELECT CONVERSION MODE\n");
+        printf("==============================\n");
+
+        
+        const char *options[4] = {
+            "Denary to Hexadecimal",
+            "Denary to Binary",
+            "Hexadecimal to Binary",
+            "Exit Program"
+        };
+
+        for (int i = 0; i < totalOptions; i++) {
+            if (i == selected) {
+                printf(" > [X] %s < \n", options[i]); // Highlighted option
+            } else {
+                printf("   [ ] %s   \n", options[i]);
+            }
+        }
+
+        printf("==============================\n");
+        printf("Use Up/Down arrows to move, Enter to select.\n");
+
+        
+        key = _getch();
+
+        
+        if (key == 224 || key == 0) {
+            key = _getch(); // Get the actual arrow code
+            if (key == KEY_UP) {
+                selected--;
+                if (selected < 0) selected = totalOptions - 1; // Wrap around to bottom
+            } else if (key == KEY_DOWN) {
+                selected++;
+                if (selected >= totalOptions) selected = 0; // Wrap around to top
+            }
+        } 
+        
+        else if (key == KEY_ENTER) {
+            system("cls");
+            if (selected == 0) {
+                printf("Launching Denary to Hex mode...\n");
+                DenaryToHexa();
+            } else if (selected == 1) {
+                printf("Launching Denary to Binary mode...\n");
+                DenaryToBinary();
+            } else if (selected == 2) {
+                printf("Launching Hex to Binary mode...\n");
+                HexaToBinary();
+            } else if (selected == 3) {
+                printf("Existing... ");
+                break;
+            }
+            printf("\nPress any key to return to menu...");
+            _getch();
+        }
+    }
+
+    return 0;
 
 }
