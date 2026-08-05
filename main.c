@@ -216,16 +216,99 @@ if (SystemPass == 1) {
     free(BinaryReservation);
 }
 
+void BinaryToHex() {
+    
+    char BinaryInput[50] ="";
+    int CurrentTotal = 0;
+    printf("Enter Your Binary Code.");
+    scanf("%s", &BinaryInput);
+
+    
+    int CCount = strlen(BinaryInput);
+    int AdditionalZero = (4 - (CCount % 4)) % 4;
+    char* BinaryReservation = (char*)malloc((CCount+AdditionalZero)+1);
+    int TimesLooped = 0;
+
+    for (int i = 0; i < AdditionalZero; i++) {
+        BinaryReservation[i] = '0';
+    }
+    
+    for (int i = 0; i < CCount; i++) {
+        BinaryReservation[AdditionalZero + i] = BinaryInput[i];
+    }
+    BinaryReservation[CCount + AdditionalZero] = '\0';
+    int NibbleCount = strlen(BinaryReservation) / 4;
+    char* BinaryValueReservation = (char*)malloc(NibbleCount+1);
+
+    for (int i = 0; i < NibbleCount; i++) {
+        int CurrentTotal = 0;
+        
+        for (int times = 0; times < 4; times++) {
+            CurrentTotal = (CurrentTotal * 2) + (BinaryReservation[(i * 4) + times] - '0');
+        }
+        BinaryValueReservation[i] = CurrentTotal;
+    }
+
+    char* HexReservation = (char*)malloc(NibbleCount+1);
+
+    for (int i = 0; i < NibbleCount; i++) {
+        if (BinaryValueReservation[i] >= 10) {
+            HexReservation[i] = 'A' + (BinaryValueReservation[i] - 10);
+        } else {
+            // FIX 4: Added '0' so numeric values turn into actual character glyphs ('0'-'9')
+            HexReservation[i] = '0' + BinaryValueReservation[i];
+        }
+    }
+
+    HexReservation[NibbleCount] = '\0';
+    printf("%s", HexReservation);
+}
+
+void HexaToDenary() {
+    
+    char Hex[50];
+
+    printf("Enter Your Hexadecimal: ");
+    scanf("%s", &Hex);
+
+    int CCount = strlen(Hex);
+    int SystemPass = 0;
+
+    for (int i = 0; i < CCount; i++) {
+        Hex[i] = toupper(Hex[i]);
+
+        if (Hex[i] >= 70) {
+            SystemPass++;
+        }
+    }
+
+    unsigned long long CurrentTotal = 0;
+    unsigned int Initialize = 0;
+    int Initialization = 0;
+    int Adder = 0;
 
 
+if (SystemPass == 0) {
+    for (int i = 0; i < CCount;  i++) {
+        CurrentTotal *= 16;
+        if (Hex[i] >=  65) {
+            CurrentTotal += (Hex[i] - 55);
+        } else {
+            CurrentTotal += (Hex[i] - '0');
+        }
+    }
 
+    printf("%llu", CurrentTotal);
+}
+
+}
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_ENTER 13
 
 int main() {
     int selected = 0;
-    int totalOptions = 4;
+    int totalOptions = 6;
     int key = 0;
 
 while (1) {
@@ -237,11 +320,13 @@ while (1) {
         printf("==============================\n");
 
         
-        const char *options[4] = {
+        const char *options[6] = {
             "Denary to Hexadecimal",
             "Denary to Binary",
             "Hexadecimal to Binary",
-            "Exit Program"
+            "Binary To HexaDecimal",
+            "HexaDecimal to Denary",
+            "Exit."
         };
 
         for (int i = 0; i < totalOptions; i++) {
@@ -282,9 +367,12 @@ while (1) {
                 printf("Launching Hex to Binary mode...\n");
                 HexaToBinary();
             } else if (selected == 3) {
-                printf("Existing... ");
+                printf("Launching Binary to Hex mode... ");
+                BinaryToHex();
+            } else if (selected == 4) {
+                printf("Exiting...");
                 break;
-            }
+            } 
             printf("\nPress any key to return to menu...");
             _getch();
         }
