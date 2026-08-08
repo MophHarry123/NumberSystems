@@ -302,13 +302,27 @@ if (SystemPass == 0) {
 }
 
 }
+
+void BinaryToDenary() {
+    char Binary[50];
+    int Current = 0;
+    printf("\n Provide the Binary number;\n");
+    scanf("%s", &Binary);
+
+    int CCount = strlen(Binary);
+
+    for (int i = 0; i < CCount; i++) {
+        Current = (Current * 2) + (Binary[i]-48);
+    } 
+    printf("%d", Current);
+}
 #define KEY_UP 72
 #define KEY_DOWN 80
 #define KEY_ENTER 13
 
 int main() {
     int selected = 0;
-    int totalOptions = 6;
+    int totalOptions = 7;
     int key = 0;
 
 while (1) {
@@ -320,12 +334,13 @@ while (1) {
         printf("==============================\n");
 
         
-        const char *options[6] = {
+        const char *options[7] = {
             "Denary to Hexadecimal",
             "Denary to Binary",
             "Hexadecimal to Binary",
             "Binary To HexaDecimal",
             "HexaDecimal to Denary",
+            "Binary to Denary",
             "Exit."
         };
 
@@ -370,9 +385,15 @@ while (1) {
                 printf("Launching Binary to Hex mode... ");
                 BinaryToHex();
             } else if (selected == 4) {
+                printf("Launching Hexadecimal to Denary mode.");
+                HexaToDenary();
+            } else if (selected == 5) {
+                printf("Launching Binary to denary mode.");
+                BinaryToDenary();
+            } else if (selected == 6) {
                 printf("Exiting...");
                 break;
-            } 
+            }
             printf("\nPress any key to return to menu...");
             _getch();
         }
